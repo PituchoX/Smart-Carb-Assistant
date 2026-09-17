@@ -4,3 +4,14 @@ __pycache__/
 .ipynb_checkpoints/
 data/raw/*
 !data/raw/.gitkeep
+
+# Pesos e modelos binários
+*.pt
+
+# Dados e imagens de teste
+data/processed/
+*.jpg
+*.png
+
+# Checkpoints de notebooks
+.ipynb_checkpoints/
