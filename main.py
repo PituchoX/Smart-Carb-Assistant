@@ -1,9 +1,5 @@
-"""
-Ponto de entrada: Smart Carb Assistant.
-Executa deteção especializada em comida (YOLO-Seg + Food101) e mapeamento vetorial INSA.
-"""
-from src.vision.detector import SmartCarbDetector
-from src.nutrition.calculator import CalculadoraNutricional
+from vision.detetor import SmartCarbDetector
+from nutrition.calculator import CalculadoraNutricional
 
 def main():
     imagem = "prato.jpg"
@@ -41,7 +37,7 @@ def main():
 
     print("-" * 85)
     print(f"Total Estimado: {resultado['total_g']} g de Hidratos de Carbono")
-    print(f"Intervalo Clínico: {resultado['intervalo_clinico']} g")
+    print(f"Intervalo Clínico: [{resultado['intervalo_clinico'][0]:.1f}g - {resultado['intervalo_clinico'][1]:.1f}g]")
     print("=" * 85)
 
 if __name__ == "__main__":
