@@ -29,9 +29,20 @@ def test_classes_do_excel_existem_no_modelo():
 def test_calcular_prato():
     calc = CalculadoraNutricional()
     resultado = calc.calcular_prato([
-        {'detetado': 'rice', 'peso_g': 150},   # 150g x 28g/100g = 42g
-        {'detetado': 'steak', 'peso_g': 200},  # carne: 0g
-        {'detetado': 'cake', 'peso_g': 80},    # sem linha no Excel
+        {'detetado': 'rice', 'area_cm2': 120},
+        {'detetado': 'steak', 'area_cm2': 100},  # carne: 0g de HC
+        {'detetado': 'cake', 'area_cm2': 50},    # sem linha no Excel
     ])
-    assert resultado['total_g'] == 42.0
+    arroz, bife, bolo = resultado['itens']
+
+    assert arroz['peso_g'] > 0
+    assert arroz['hc_g'] == arroz['peso_g'] * 28 / 100   # Arroz solto cozido: 28g/100g
+    assert bife['hc_g'] == 0
+    assert bolo['hc_g'] is None                           # fica fora do total
+    assert resultado['total_g'] == round(arroz['hc_g'], 1)
     assert resultado['sem_correspondencia'] == ['cake']
+
+
+def test_mais_area_da_mais_peso():
+    calc = CalculadoraNutricional()
+    assert calc.estimar_peso(200, 'Batata') > calc.estimar_peso(50, 'Batata')

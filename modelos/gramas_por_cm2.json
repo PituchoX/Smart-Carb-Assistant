@@ -1,0 +1,12 @@
+{
+  "geral": 0.585,
+  "por_categoria": {
+    "Batata": 0.62,
+    "Cereais e pseudo-cereais": 0.652,
+    "Fruta fresca": 0.942,
+    "Frutos amiláceos e oleaginosos": 0.418,
+    "Não contabilizar": 0.542,
+    "Pratos mistos, cozinhados e outros": 0.462,
+    "Pão": 0.348
+  }
+}
