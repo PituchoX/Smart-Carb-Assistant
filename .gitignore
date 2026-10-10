@@ -15,3 +15,4 @@ data/processed/
 
 # Checkpoints de notebooks
 .ipynb_checkpoints/
+.pytest_cache/

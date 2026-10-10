@@ -5,7 +5,7 @@ def main():
     imagem = "prato.jpg"
 
     print("=" * 80)
-    print("   SMART CARB ASSISTANT | COMPUTER VISION + INSA SEMANTIC MATCHING")
+    print("   SMART CARB ASSISTANT | COMPUTER VISION + TABELA APDP/INSA")
     print("=" * 80)
 
     # 1. Instanciar o novo detetor de 2 Fases (YOLO-Seg + ResNet)
@@ -22,22 +22,27 @@ def main():
     calculadora = CalculadoraNutricional()
     resultado = calculadora.calcular_prato(detecoes)
 
-    print("\n--- ESTIMATIVA POR ALIMENTO (ÁREA VISUAL & TCA INSA) ---")
-    cabecalho = f"{'Detetado':<16} | {'Registo INSA':<28} | {'Peso':<6} | {'HC (g)':<7} | {'Margem Segura'}"
+    print("\n--- ESTIMATIVA POR ALIMENTO (ÁREA VISUAL & TABELA APDP/INSA) ---")
+    cabecalho = f"{'Detetado':<16} | {'Alimento na tabela':<28} | {'Peso':<6} | {'HC (g)':<7} | {'Margem'}"
     print(cabecalho)
     print("-" * 85)
 
     for item in resultado["itens"]:
         det = item["detetado"][:14]
-        match = item["nome_insa"][:26]
         peso = f"{item['peso_g']:.0f}g"
+        if item["hc_g"] is None:
+            print(f"{det:<16} | {'SEM CORRESPONDÊNCIA':<28} | {peso:<6} | {'?':<7} |")
+            continue
+        alimento = item["alimento"][:26]
         hc = f"{item['hc_g']:.1f}g"
         margem = f"[{item['margem'][0]:.1f}g - {item['margem'][1]:.1f}g]"
-        print(f"{det:<16} | {match:<28} | {peso:<6} | {hc:<7} | {margem}")
+        print(f"{det:<16} | {alimento:<28} | {peso:<6} | {hc:<7} | {margem}")
 
     print("-" * 85)
     print(f"Total Estimado: {resultado['total_g']} g de Hidratos de Carbono")
     print(f"Intervalo Clínico: [{resultado['intervalo_clinico'][0]:.1f}g - {resultado['intervalo_clinico'][1]:.1f}g]")
+    if resultado["sem_correspondencia"]:
+        print(f"ATENÇÃO: não incluído no total (contar à parte): {', '.join(resultado['sem_correspondencia'])}")
     print("=" * 85)
 
 if __name__ == "__main__":
