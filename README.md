@@ -17,8 +17,8 @@ Foto → 1. Encontrar o prato (escala) → 2. Detetar alimentos (área em cm²) 
 1. **Escala:** o prato é encontrado com o YOLO-World (deteção a partir de texto: "plate"). Assumindo um prato
    de 26 cm, sabe-se quantos píxeis correspondem a 1 cm. A escala é calculada na horizontal e na vertical
    em separado, para corrigir fotos tiradas de lado.
-2. **Alimentos:** um modelo YOLOv8 de segmentação treinado no dataset FoodSeg103 (103 classes) recorta cada
-   alimento e mede a sua área.
+2. **Alimentos:** um modelo YOLOv8 de segmentação treinado no dataset FoodSeg103 (103 classes), de
+   [gorkatorres](https://huggingface.co/gorkatorres/8_Reto2_0ndAAkin_2526_G1), recorta cada alimento e mede a sua área.
 3. **Peso:** `peso = área × gramas por cm²`, com os gramas por cm² de cada categoria **aprendidos com dados
    reais** (ver resultados abaixo).
 4. **Hidratos:** cada classe do modelo está ligada a uma linha de `dados/tabela_alimentos.xlsx`, criada a partir
@@ -86,8 +86,10 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-O modelo YOLO-World é descarregado automaticamente na primeira execução. O modelo de segmentação
-(`modelo_segmentacao_alimentos.pt`) tem de ser colocado na raiz do projeto.
+O modelo YOLO-World é descarregado automaticamente na primeira execução. O modelo de segmentação tem de
+ser descarregado à mão
+([`weights/best.pt`](https://huggingface.co/gorkatorres/8_Reto2_0ndAAkin_2526_G1/blob/main/weights/best.pt))
+e guardado na raiz do projeto com o nome `modelo_segmentacao_alimentos.pt`.
 
 Para repetir o treino do modelo de peso: `python scripts/descarregar_nutrition5k.py`,
 `python scripts/extrair_areas.py` e correr o notebook.
@@ -98,3 +100,5 @@ Para repetir o treino do modelo de peso: `python scripts/descarregar_nutrition5k
 - INSA — Tabela da Composição de Alimentos Portuguesa
 - Nutrition5k — Thames et al., 2021 (CC BY 4.0)
 - FoodSeg103 — Wu et al., 2021
+- Modelo de segmentação YOLOv8n-seg treinado no FoodSeg103 — gorkatorres, projeto académico OndaAkin 2526,
+  Grupo 1 ([Hugging Face](https://huggingface.co/gorkatorres/8_Reto2_0ndAAkin_2526_G1), Apache 2.0)
