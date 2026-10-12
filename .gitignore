@@ -15,3 +15,6 @@ __pycache__/
 
 # Dados descarregados do Nutrition5k (grandes, não vão para o git)
 dados/nutrition5k/
+
+# FoodSeg103 convertido para YOLO (grande, não vai para o git)
+dados/foodseg103/
