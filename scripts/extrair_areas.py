@@ -1,12 +1,4 @@
-"""
-Corre o modelo de segmentação nas fotos do Nutrition5k e guarda, para cada
-prato, a área (em píxeis) ocupada pela comida.
-
-A área total é a união de todas as máscaras detetadas, para não contar duas
-vezes zonas onde as máscaras se sobrepõem.
-
-Saída: dados/nutrition5k/areas.csv
-"""
+"""Mede a área da comida (em píxeis) em cada foto do Nutrition5k -> dados/nutrition5k/areas.csv"""
 import os
 
 import cv2

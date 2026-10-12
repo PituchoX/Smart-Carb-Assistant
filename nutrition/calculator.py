@@ -5,8 +5,7 @@ import pandas as pd
 
 PASTA_PROJETO = os.path.join(os.path.dirname(__file__), '..')
 CAMINHO_EXCEL = os.path.join(PASTA_PROJETO, 'dados', 'tabela_alimentos.xlsx')
-# Gramas por cm² de cada categoria de alimento, aprendidos com dados reais
-# em notebooks/modelo_peso.ipynb
+# Gramas por cm² de cada categoria (ver notebooks/modelo_peso.ipynb)
 CAMINHO_MODELO_PESO = os.path.join(PASTA_PROJETO, 'modelos', 'gramas_por_cm2.json')
 MARGEM_SEGURANCA = 0.15
 
@@ -14,13 +13,11 @@ MARGEM_SEGURANCA = 0.15
 class CalculadoraNutricional:
     def __init__(self, caminho_excel: str = CAMINHO_EXCEL):
         df = pd.read_excel(caminho_excel)
-        self.tabela_completa = df  # usada na app para o utilizador escolher outro alimento
+        self.tabela_completa = df
         with open(CAMINHO_MODELO_PESO, encoding='utf-8') as f:
             self.modelo_peso = json.load(f)
 
-        # A coluna classe_modelo diz a que linha corresponde cada classe do
-        # modelo de visão (ex: 'rice' -> "Arroz solto cozido"). Uma célula
-        # pode ter várias classes separadas por vírgula (ex: "pasta, noodles").
+        # classe do modelo -> linha do Excel (ex: 'rice' -> "Arroz solto cozido")
         self.tabela = {}
         for _, linha in df.dropna(subset=['classe_modelo']).iterrows():
             for classe in str(linha['classe_modelo']).split(','):
@@ -30,7 +27,6 @@ class CalculadoraNutricional:
                 self.tabela[classe] = linha
 
     def estimar_peso(self, area_cm2: float, categoria: str | None) -> float:
-        # Categorias sem dados de treino (ou alimentos fora do Excel) usam o valor geral
         g_por_cm2 = self.modelo_peso['por_categoria'].get(categoria, self.modelo_peso['geral'])
         return area_cm2 * g_por_cm2
 
@@ -46,8 +42,7 @@ class CalculadoraNutricional:
             peso_g = self.estimar_peso(det['area_cm2'], categoria)
 
             if linha is None:
-                # Não inventamos um valor: o alimento fica fora do total e o
-                # utilizador é avisado para o contar à parte.
+                # sem linha no Excel: fica fora do total
                 sem_correspondencia.append(classe)
                 itens.append({'detetado': classe, 'alimento': None, 'fonte': None,
                               'peso_g': peso_g, 'hc_g': None, 'margem': None})

@@ -16,7 +16,8 @@ Foto → 1. Encontrar o prato (escala) → 2. Detetar alimentos (área em cm²) 
 
 1. **Escala:** o prato é encontrado com o YOLO-World (deteção a partir de texto: "plate"). Assumindo um prato
    de 26 cm, sabe-se quantos píxeis correspondem a 1 cm. A escala é calculada na horizontal e na vertical
-   em separado, para corrigir fotos tiradas de lado.
+   em separado, para corrigir fotos tiradas de lado. (A primeira versão procurava um círculo branco com OpenCV,
+   mas falhava com pratos de cor, fotos tiradas de lado e taças ao lado do prato.)
 2. **Alimentos:** um modelo YOLOv8 de segmentação treinado no dataset FoodSeg103 (103 classes), de
    [gorkatorres](https://huggingface.co/gorkatorres/8_Reto2_0ndAAkin_2526_G1), recorta cada alimento e mede a sua área.
 3. **Peso:** `peso = área × gramas por cm²`, com os gramas por cm² de cada categoria **aprendidos com dados

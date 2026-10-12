@@ -1,22 +1,6 @@
-"""
-Descarrega o FoodSeg103 do Hugging Face e converte-o para o formato do YOLO,
-para avaliar (e, mais tarde, treinar) modelos de segmentação de alimentos.
+"""Descarrega o FoodSeg103 e converte as máscaras para o formato do YOLO.
 
-FoodSeg103: https://huggingface.co/datasets/EduardoPacheco/FoodSeg103 (Apache 2.0)
-
-Conjuntos criados:
-- test:  as 2135 fotos de teste oficiais (só para a comparação final)
-- train: 90% das fotos de treino oficiais
-- val:   os outros 10%, que o YOLO usa durante o treino para escolher o melhor modelo
-         (assim as fotos de teste nunca influenciam o treino)
-
-No FoodSeg103 cada foto tem uma máscara em que cada píxel tem o número do
-alimento (0 = fundo, 1 = candy, ..., 103 = other ingredients). O YOLO precisa
-de contornos (polígonos), por isso cada zona contínua de um alimento passa a
-ser um polígono. A classe v da máscara corresponde à classe v-1 do modelo.
-
-Uso:  python scripts/preparar_foodseg103.py            (só o conjunto de teste)
-      python scripts/preparar_foodseg103.py --treino   (também treino e validação)
+Uso: python scripts/preparar_foodseg103.py [--treino]
 """
 import io
 import json
@@ -86,7 +70,7 @@ def converter(origem):
     if origem == 'test':
         destinos = ['test'] * len(df)
     else:
-        # Separação aleatória mas fixa (random_state), para ser sempre a mesma
+        # 90% treino, 10% validação
         validacao = set(df.sample(frac=FRACAO_VALIDACAO, random_state=42).index)
         destinos = ['val' if i in validacao else 'train' for i in df.index]
 

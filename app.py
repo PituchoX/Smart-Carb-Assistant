@@ -14,8 +14,7 @@ st.set_page_config(
 )
 
 
-# O Streamlit volta a correr este script sempre que o utilizador mexe num
-# campo. Os modelos e a deteção ficam em cache para não repetir trabalho.
+# cache para não repetir a deteção sempre que o utilizador muda um campo
 @st.cache_resource
 def carregar_modelos():
     return SmartCarbDetector(), CalculadoraNutricional()
@@ -77,7 +76,6 @@ if uploaded_file is not None:
     _, calculadora = carregar_modelos()
     tabela = calculadora.tabela_completa
 
-    # Opções da lista: "não contar" + todas as linhas do Excel (pelo número da linha)
     NAO_CONTAR = -1
     opcoes = [NAO_CONTAR] + list(tabela.index)
 
@@ -117,7 +115,7 @@ if uploaded_file is not None:
 
         linha = tabela.loc[escolha]
         peso_estimado = calculadora.estimar_peso(det['area_cm2'], linha['categoria'])
-        # A chave inclui o alimento escolhido: ao mudar de alimento, o peso volta a ser estimado
+        # a key muda com o alimento, para o peso ser estimado de novo
         peso = c_peso.number_input(
             "Peso (g)", min_value=0, value=int(round(peso_estimado)), step=5,
             key=f"peso_{n}_{escolha}", label_visibility="collapsed",

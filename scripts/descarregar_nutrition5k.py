@@ -1,13 +1,4 @@
-"""
-Descarrega a parte do Nutrition5k de que precisamos:
-- os metadados (peso real de cada ingrediente em cada prato)
-- as fotos tiradas de cima (rgb.png) dos pratos com alimentos ricos em hidratos
-
-Nutrition5k: https://github.com/google-research-datasets/Nutrition5k (licença CC BY 4.0)
-
-Também cria dados/nutrition5k/ingredientes.csv: uma linha por ingrediente de
-cada prato, mais fácil de usar com pandas do que o CSV original.
-"""
+"""Descarrega os metadados e as fotos de cima do Nutrition5k (pratos com hidratos e de um só ingrediente)."""
 import os
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -27,8 +18,6 @@ FICHEIROS_METADADOS = [
     'dish_ids/splits/rgb_test_ids.txt',
 ]
 
-# Ingredientes do Nutrition5k que correspondem aos alimentos com hidratos
-# que o nosso modelo deteta (arroz, batata, pão, massa, pizza)
 INGREDIENTES_ALVO = [
     'white rice', 'brown rice', 'fried rice', 'wild rice', 'country rice',
     'potatoes', 'roasted potatoes', 'sweet potato', 'hash browns',

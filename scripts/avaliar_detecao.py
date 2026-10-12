@@ -1,14 +1,4 @@
-"""
-Compara modelos de segmentação de alimentos nas 2135 fotos de teste do
-FoodSeg103 (preparadas por scripts/preparar_foodseg103.py).
 
-Métrica: mAP50 das máscaras — de 0 a 1, quanto maior melhor. Mede se o modelo
-encontra cada alimento, lhe dá o nome certo e o recorta com pelo menos 50% de
-sobreposição com a anotação.
-
-Uso: python scripts/avaliar_detecao.py atual yoloe-11s yoloe-11l
-     python scripts/avaliar_detecao.py atual caminho/para/outro_modelo.pt
-"""
 import os
 import sys
 

@@ -1,14 +1,4 @@
-"""
-Lê o PDF da APDP ("Gramas de HC em 100g de alimento edível") e cria a
-tabela de alimentos em Excel.
-
-O PDF tem 3 colunas por página. Se lermos a página inteira, o texto das
-3 colunas fica misturado na mesma linha, por isso cada coluna é recortada
-e lida separadamente.
-
-ATENÇÃO: o Excel gerado é depois revisto à mão (coluna classe_modelo).
-Se já existir, o script não o substitui, para não apagar essas edições.
-"""
+"""Extrai a tabela de hidratos do PDF da APDP para dados/tabela_alimentos.xlsx."""
 import os
 import re
 

@@ -1,7 +1,4 @@
-"""
-Deteção de alimentos a partir de uma foto do prato: o que é cada alimento
-e quanta área (cm²) ocupa. O peso é estimado depois, em nutrition/calculator.py.
-"""
+"""Deteta os alimentos na foto e mede a área (cm²) de cada um."""
 import cv2
 import numpy as np
 from ultralytics import YOLO
