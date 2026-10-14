@@ -18,8 +18,8 @@ Foto → 1. Encontrar o prato (escala) → 2. Detetar alimentos (área em cm²) 
    de 26 cm, sabe-se quantos píxeis correspondem a 1 cm. A escala é calculada na horizontal e na vertical
    em separado, para corrigir fotos tiradas de lado. (A primeira versão procurava um círculo branco com OpenCV,
    mas falhava com pratos de cor, fotos tiradas de lado e taças ao lado do prato.)
-2. **Alimentos:** um modelo YOLOv8 de segmentação treinado no dataset FoodSeg103 (103 classes), de
-   [gorkatorres](https://huggingface.co/gorkatorres/8_Reto2_0ndAAkin_2526_G1), recorta cada alimento e mede a sua área.
+2. **Alimentos:** um YOLOv8s-seg que treinei no dataset FoodSeg103 (103 classes) recorta cada alimento e mede
+   a sua área.
 3. **Peso:** `peso = área × gramas por cm²`, com os gramas por cm² de cada categoria **aprendidos com dados
    reais** (ver resultados abaixo).
 4. **Hidratos:** cada classe do modelo está ligada a uma linha de `dados/tabela_alimentos.xlsx`, criada a partir
@@ -27,6 +27,22 @@ Foto → 1. Encontrar o prato (escala) → 2. Detetar alimentos (área em cm²) 
 5. **Confirmação:** na app, o utilizador pode corrigir o alimento (ex: batata cozida → assada) e o peso.
 
 ## Resultados
+
+### Detetar os alimentos
+
+Comecei com um YOLOv8n-seg já treinado no FoodSeg103 (de
+[gorkatorres](https://huggingface.co/gorkatorres/8_Reto2_0ndAAkin_2526_G1)). Para o melhorar, comparei
+alternativas nas 2135 fotos de teste do FoodSeg103, com a mesma métrica (mAP50 das máscaras):
+
+| Modelo | mAP50 |
+|---|---|
+| YOLOv8n-seg de partida | 0,215 |
+| YOLOE-11L, sem treino (recebe os nomes dos alimentos em texto) | 0,080 |
+| **YOLOv8s-seg treinado por mim no Google Colab** ✅ | **0,301** |
+
+O YOLOE parecia melhor em 3 fotos de teste, mas no conjunto de 2135 fotos ficou muito atrás: só a medição
+mostrou isso. O modelo treinado (60 épocas, 90% treino / 10% validação, teste à parte) melhorou o mAP50 em
+40%. Treino em [`notebooks/treinar_detetor_colab.ipynb`](notebooks/treinar_detetor_colab.ipynb).
 
 ### Ligar o alimento detetado à tabela nutricional
 
@@ -56,8 +72,8 @@ escolhido dá sempre mais peso a mais área e é fácil de explicar. Detalhes em
 
 ### Limitações
 
-- O modelo de deteção tem precisão modesta (mAP50 ≈ 0,30) e às vezes confunde alimentos
-  (ex: batatas fritas → `noodles`). Por isso a app pede confirmação.
+- O modelo de deteção tem precisão modesta (mAP50 = 0,30): às vezes confunde alimentos (ex: batatas fritas →
+  `pasta`) ou deteta pedaços que não existem. Por isso a app pede confirmação.
 - O peso foi aprendido com porções de cantina, mais pequenas e rasas do que um prato de restaurante.
 - Uma foto de cima não mostra a altura da comida, por isso o peso tem sempre um erro considerável.
 - Pratos portugueses compostos (feijoada, bacalhau à brás) não existem nas classes do modelo.
@@ -74,9 +90,12 @@ scripts/etl_apdp.py                 PDF da APDP → dados/tabela_alimentos.xlsx
 scripts/descarregar_nutrition5k.py  Descarrega a parte do Nutrition5k usada
 scripts/extrair_areas.py            Mede a área da comida nas fotos do Nutrition5k
 notebooks/modelo_peso.ipynb         Treino e avaliação do modelo de peso
+scripts/preparar_foodseg103.py      FoodSeg103 → formato YOLO (treino / validação / teste)
+scripts/avaliar_detecao.py          Compara modelos de deteção nas fotos de teste
+notebooks/treinar_detetor_colab.ipynb  Treino do modelo de deteção (Google Colab)
 
 dados/      PDF da APDP, tabela do INSA e a tabela de alimentos usada pela app
-modelos/    gramas_por_cm2.json (modelo de peso)
+modelos/    yolov8s_foodseg103.pt (deteção) e gramas_por_cm2.json (peso)
 tests/      Testes (pytest)
 ```
 
@@ -87,10 +106,11 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-O modelo YOLO-World é descarregado automaticamente na primeira execução. O modelo de segmentação tem de
-ser descarregado à mão
-([`weights/best.pt`](https://huggingface.co/gorkatorres/8_Reto2_0ndAAkin_2526_G1/blob/main/weights/best.pt))
-e guardado na raiz do projeto com o nome `modelo_segmentacao_alimentos.pt`.
+O modelo YOLO-World é descarregado automaticamente na primeira execução.
+
+Só para repetir as comparações ou o treino do modelo de peso é preciso o modelo de partida
+([`weights/best.pt`](https://huggingface.co/gorkatorres/8_Reto2_0ndAAkin_2526_G1/blob/main/weights/best.pt)),
+guardado na raiz do projeto com o nome `modelo_segmentacao_alimentos.pt`.
 
 Para repetir o treino do modelo de peso: `python scripts/descarregar_nutrition5k.py`,
 `python scripts/extrair_areas.py` e correr o notebook.
@@ -101,5 +121,5 @@ Para repetir o treino do modelo de peso: `python scripts/descarregar_nutrition5k
 - INSA — Tabela da Composição de Alimentos Portuguesa
 - Nutrition5k — Thames et al., 2021 (CC BY 4.0)
 - FoodSeg103 — Wu et al., 2021
-- Modelo de segmentação YOLOv8n-seg treinado no FoodSeg103 — gorkatorres, projeto académico OndaAkin 2526,
+- Modelo de partida YOLOv8n-seg treinado no FoodSeg103 — gorkatorres, projeto académico OndaAkin 2526,
   Grupo 1 ([Hugging Face](https://huggingface.co/gorkatorres/8_Reto2_0ndAAkin_2526_G1), Apache 2.0)

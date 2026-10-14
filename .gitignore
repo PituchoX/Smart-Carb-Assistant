@@ -4,6 +4,8 @@ __pycache__/
 
 # Pesos e modelos binários
 *.pt
+# exceto o modelo de deteção treinado por nós (~23 MB), usado pela app
+!modelos/yolov8s_foodseg103.pt
 
 # Dados e imagens de teste
 *.jpg

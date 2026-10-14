@@ -4,7 +4,7 @@ from nutrition.calculator import CalculadoraNutricional
 from scripts.etl_apdp import CAMINHO_PDF, extrair_alimentos
 
 PASTA_PROJETO = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-CAMINHO_MODELO = os.path.join(PASTA_PROJETO, 'modelo_segmentacao_alimentos.pt')
+CAMINHO_MODELO = os.path.join(PASTA_PROJETO, 'modelos', 'yolov8s_foodseg103.pt')
 
 
 def test_extracao_do_pdf():

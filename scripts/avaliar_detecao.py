@@ -8,7 +8,8 @@ PASTA_PROJETO = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 DATA_YAML = os.path.join(PASTA_PROJETO, 'dados', 'foodseg103', 'data.yaml')
 
 MODELOS = {
-    'atual': os.path.join(PASTA_PROJETO, 'modelo_segmentacao_alimentos.pt'),
+    'original': os.path.join(PASTA_PROJETO, 'modelo_segmentacao_alimentos.pt'),  # YOLOv8n de gorkatorres
+    'yolov8s': os.path.join(PASTA_PROJETO, 'modelos', 'yolov8s_foodseg103.pt'),   # treinado por nós
     'yoloe-11s': os.path.join(PASTA_PROJETO, 'modelos', 'yoloe-11s-seg.pt'),
     'yoloe-11l': os.path.join(PASTA_PROJETO, 'modelos', 'yoloe-11l-seg.pt'),
 }
@@ -20,7 +21,7 @@ def carregar(nome):
     if not nome.startswith('yoloe'):
         return YOLO(MODELOS[nome])
     # O YOLOE recebe os nomes dos alimentos em texto: usamos as mesmas 103 classes
-    nomes = list(YOLO(MODELOS['atual']).names.values())
+    nomes = list(YOLO(MODELOS['original']).names.values())
     modelo = YOLOE(MODELOS[nome])
     modelo.set_classes(nomes, modelo.get_text_pe(nomes))
     return modelo

@@ -1,13 +1,18 @@
 """Deteta os alimentos na foto e mede a área (cm²) de cada um."""
+import os
+
 import cv2
 import numpy as np
 from ultralytics import YOLO
 
 from .calibration import CalibradorPrato
 
+# YOLOv8s-seg treinado no FoodSeg103 (notebooks/treinar_detetor_colab.ipynb)
+CAMINHO_MODELO = os.path.join(os.path.dirname(__file__), '..', 'modelos', 'yolov8s_foodseg103.pt')
+
 
 class SmartCarbDetector:
-    def __init__(self, caminho_modelo: str = 'modelo_segmentacao_alimentos.pt',
+    def __init__(self, caminho_modelo: str = CAMINHO_MODELO,
                  diametro_prato_cm: float = 26.0):
         self.modelo = YOLO(caminho_modelo)
         self.calibrador = CalibradorPrato(diametro_prato_cm)
