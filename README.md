@@ -6,7 +6,7 @@ de cada um e calcula os hidratos com a tabela da APDP (Associação Protetora do
 **Motivação:** sou diabético tipo 1 e conto hidratos a cada refeição para calcular a dose de insulina.
 Em restaurantes não há balança, por isso a contagem é feita "a olho".
 
-> ⚠️ É uma estimativa com erros de dezenas de gramas. Não substitui a pesagem nem a orientação médica.
+> **Nota:** é uma estimativa com erros de dezenas de gramas. Não substitui a pesagem nem a orientação médica.
 
 ## Como funciona
 
@@ -38,7 +38,7 @@ alternativas nas 2135 fotos de teste do FoodSeg103, com a mesma métrica (mAP50 
 |---|---|
 | YOLOv8n-seg de partida | 0,215 |
 | YOLOE-11L, sem treino (recebe os nomes dos alimentos em texto) | 0,080 |
-| **YOLOv8s-seg treinado por mim no Google Colab** ✅ | **0,301** |
+| **YOLOv8s-seg treinado por mim no Google Colab** (escolhido) | **0,301** |
 
 O YOLOE parecia melhor em 3 fotos de teste, mas no conjunto de 2135 fotos ficou muito atrás: só a medição
 mostrou isso. O modelo treinado (60 épocas, 90% treino / 10% validação, teste à parte) melhorou o mAP50 em
@@ -62,7 +62,7 @@ dos dados (ex: fotos onde o YOLO marcou a mesa inteira como comida).
 |---|---|
 | Fórmula com valores manuais | 104 g |
 | Ignorar a foto (peso médio da categoria) | 41 g |
-| **Gramas por cm² aprendidos por categoria** ✅ | **38 g** |
+| **Gramas por cm² aprendidos por categoria** (escolhido) | **38 g** |
 | Random Forest | 32 g |
 
 A Random Forest teve o menor erro, mas **não foi a escolhida**: em fotos de pratos reais, fora do que viu no
@@ -118,9 +118,9 @@ Para repetir o treino do modelo de peso: `python scripts/descarregar_nutrition5k
 
 ## Fontes
 
-- APDP — *Contagem de Hidratos de Carbono: gramas de HC em 100 g de alimento edível* (2020)
-- INSA — Tabela da Composição de Alimentos Portuguesa
-- Nutrition5k — Thames et al., 2021 (CC BY 4.0)
-- FoodSeg103 — Wu et al., 2021
-- Modelo de partida YOLOv8n-seg treinado no FoodSeg103 — gorkatorres, projeto académico OndaAkin 2526,
+- APDP, *Contagem de Hidratos de Carbono: gramas de HC em 100 g de alimento edível* (2020)
+- INSA, Tabela da Composição de Alimentos Portuguesa
+- Nutrition5k, Thames et al., 2021 (CC BY 4.0)
+- FoodSeg103, Wu et al., 2021
+- Modelo de partida YOLOv8n-seg treinado no FoodSeg103, de gorkatorres, projeto académico OndaAkin 2526,
   Grupo 1 ([Hugging Face](https://huggingface.co/gorkatorres/8_Reto2_0ndAAkin_2526_G1), Apache 2.0)

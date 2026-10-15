@@ -7,7 +7,7 @@ import streamlit as st
 from nutrition.calculator import MARGEM_SEGURANCA, CalculadoraNutricional
 from vision.detetor import SmartCarbDetector
 
-st.set_page_config(page_title="Smart Carb Assistant", page_icon="🍽️", layout="wide")
+st.set_page_config(page_title="Smart Carb Assistant", layout="wide")
 
 
 # cache para não repetir a deteção sempre que o utilizador muda um campo
@@ -38,9 +38,8 @@ def bolinha(numero, cor):
     return f'<div class="bolinha" style="background:{cor}">{numero}</div>'
 
 
-def passo(numero, icone, titulo, texto):
-    return (f'<div class="passo"><div class="icone">{icone}</div><div class="numero">PASSO {numero}</div>'
-            f'<h4>{titulo}</h4><p>{texto}</p></div>')
+def passo(numero, titulo, texto):
+    return f'<div class="passo"><div class="numero">{numero}</div><h4>{titulo}</h4><p>{texto}</p></div>'
 
 
 with open(os.path.join(os.path.dirname(__file__), "estilo.css"), encoding="utf-8") as f:
@@ -49,17 +48,14 @@ with open(os.path.join(os.path.dirname(__file__), "estilo.css"), encoding="utf-8
 # ---------- Cabeçalho e upload ----------
 st.markdown("""
 <div class="hero">
-  <h1>🍽️ Smart Carb Assistant</h1>
+  <h1>Smart Carb Assistant</h1>
   <p>Tira uma foto ao prato e fica a saber quantos hidratos de carbono tem.</p>
-  <span class="chip">📷 Deteção dos alimentos</span>
-  <span class="chip">⚖️ Peso estimado</span>
-  <span class="chip">📋 Tabela da APDP</span>
 </div>
 """, unsafe_allow_html=True)
 
 col_titulo, col_def = st.columns([4, 1], vertical_alignment="bottom")
-col_titulo.markdown("#### 📷 Carrega a foto do teu prato")
-with col_def.popover("⚙️ Definições", width="stretch"):
+col_titulo.markdown("#### Carrega a foto do teu prato")
+with col_def.popover("Definições", width="stretch"):
     diametro_prato = st.slider("Diâmetro do prato (cm)", 20.0, 32.0, 26.0, 0.5,
                                help="O prato serve de régua para medir a comida.")
 foto = st.file_uploader("Foto do prato", type=["jpg", "jpeg", "png"], label_visibility="collapsed")
@@ -67,11 +63,11 @@ foto = st.file_uploader("Foto do prato", type=["jpg", "jpeg", "png"], label_visi
 if foto is None:
     st.markdown("#### Como funciona")
     c1, c2, c3 = st.columns(3)
-    c1.markdown(passo(1, "📸", "Tira a foto", "De cima ou pouco inclinada, com o prato inteiro e boa luz."),
+    c1.markdown(passo(1, "Tira a foto", "De cima ou pouco inclinada, com o prato inteiro e boa luz."),
                 unsafe_allow_html=True)
-    c2.markdown(passo(2, "🔍", "A app analisa", "Deteta cada alimento, mede a área e estima o peso."),
+    c2.markdown(passo(2, "A app analisa", "Deteta cada alimento, mede a área e estima o peso."),
                 unsafe_allow_html=True)
-    c3.markdown(passo(3, "✅", "Confirma e conta", "Corrige o que estiver errado e vê o total de hidratos."),
+    c3.markdown(passo(3, "Confirma e conta", "Corrige o que estiver errado e vê o total de hidratos."),
                 unsafe_allow_html=True)
     st.stop()
 
@@ -94,7 +90,7 @@ opcoes = [NAO_CONTAR] + list(tabela.index)
 
 
 def nome_opcao(i):
-    return "— não contar —" if i == NAO_CONTAR else tabela.at[i, 'alimento']
+    return "Não contar" if i == NAO_CONTAR else tabela.at[i, 'alimento']
 
 
 col_foto, col_lista = st.columns([1, 1.1], gap="large")
@@ -134,7 +130,7 @@ with col_lista:
             help=f"O modelo detetou: {det['detetado']} ({det['confianca']:.0%} de confiança)",
         )
         if escolha == NAO_CONTAR:
-            c_hc.markdown("—")
+            c_hc.markdown("-")
             if sugestao == NAO_CONTAR:
                 por_escolher.append(n)
             return
@@ -155,7 +151,7 @@ with col_lista:
         mostrar_alimento(*item)
 
     if sem_hc:
-        with st.expander(f"Sem hidratos ({len(sem_hc)}) — carne, peixe, ovo, legumes"):
+        with st.expander(f"Sem hidratos ({len(sem_hc)}): carne, peixe, ovo e legumes"):
             cabecalho()
             for item in sem_hc:
                 mostrar_alimento(*item)
@@ -168,10 +164,10 @@ with col_lista:
     <div class="total">
       <div class="rotulo">Hidratos de carbono no prato</div>
       <div class="valor">{total_hc:.0f} g</div>
-      <div class="intervalo">Intervalo provável: {total_hc * (1 - MARGEM_SEGURANCA):.0f} – {total_hc * (1 + MARGEM_SEGURANCA):.0f} g</div>
+      <div class="intervalo">Intervalo provável: entre {total_hc * (1 - MARGEM_SEGURANCA):.0f} e {total_hc * (1 + MARGEM_SEGURANCA):.0f} g</div>
     </div>
     """, unsafe_allow_html=True)
 
 st.divider()
-st.caption("⚠️ Estimativa a partir de uma foto: o peso pode ter erros de dezenas de gramas. "
+st.caption("Nota: estimativa a partir de uma foto, o peso pode ter erros de dezenas de gramas. "
            "Não substitui a pesagem nem a orientação da tua equipa de saúde.")

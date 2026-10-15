@@ -34,7 +34,7 @@ class SmartCarbDetector:
         escala = self.calibrador.calcular_escala(imagem_bgr)
         if escala is None:
             raise ValueError(
-                "Não foi possível medir o prato nesta foto — tenta uma foto com o prato inteiro visível."
+                "Não foi possível medir o prato nesta foto. Tenta uma foto com o prato inteiro visível."
             )
 
         r = self.modelo(caminho_imagem, conf=conf, verbose=False)[0]
