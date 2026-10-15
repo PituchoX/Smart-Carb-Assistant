@@ -9,7 +9,7 @@ from ultralytics import YOLO
 PASTA_PROJETO = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 PASTA_FOTOS = os.path.join(PASTA_PROJETO, 'dados', 'nutrition5k', 'fotos')
 CAMINHO_SAIDA = os.path.join(PASTA_PROJETO, 'dados', 'nutrition5k', 'areas.csv')
-CAMINHO_MODELO = os.path.join(PASTA_PROJETO, 'modelo_segmentacao_alimentos.pt')
+CAMINHO_MODELO = os.path.join(PASTA_PROJETO, 'modelos', 'yolov8s_foodseg103.pt')
 
 modelo = YOLO(CAMINHO_MODELO)
 fotos = sorted(os.listdir(PASTA_FOTOS))

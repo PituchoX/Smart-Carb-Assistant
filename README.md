@@ -57,18 +57,18 @@ revista à mão: simples, previsível e fácil de corrigir.
 
 A primeira versão usava `área × altura × densidade`, com valores escolhidos à mão. Para os substituir, usei o
 [Nutrition5k](https://github.com/google-research-datasets/Nutrition5k) (Google): pratos fotografados de cima
-com o peso real de cada ingrediente. Treinei com cerca de 640 pratos de um só ingrediente, depois de limpar erros
+com o peso real de cada ingrediente. Treinei com 711 pratos de um só ingrediente, depois de limpar erros
 dos dados (ex: fotos onde o YOLO marcou a mesa inteira como comida).
 
 | Abordagem | Erro médio no peso (pratos de teste) |
 |---|---|
-| Fórmula com valores manuais | 104 g |
+| Fórmula com valores manuais | 113 g |
 | Ignorar a foto (peso médio da categoria) | 41 g |
-| **Gramas por cm² aprendidos por categoria** (escolhido) | **38 g** |
-| Random Forest | 32 g |
+| **Gramas por cm² aprendidos por categoria** (escolhido) | **35 g** |
+| Random Forest | 29 g |
 
 A Random Forest teve o menor erro, mas **não foi a escolhida**: em fotos de pratos reais, fora do que viu no
-treino, dava resultados sem sentido (um pedaço de tomate com 100 g, mais área com menos peso). O modelo
+treino, dava resultados sem sentido (um pedaço de tomate e um pedaço pequeno de carne com mais de 100 g cada). O modelo
 escolhido dá sempre mais peso a mais área e é fácil de explicar. Detalhes em
 [`notebooks/modelo_peso.ipynb`](notebooks/modelo_peso.ipynb).
 
