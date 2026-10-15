@@ -10,6 +10,15 @@ from .calibration import CalibradorPrato
 # YOLOv8s-seg treinado no FoodSeg103 (notebooks/treinar_detetor_colab.ipynb)
 CAMINHO_MODELO = os.path.join(os.path.dirname(__file__), '..', 'modelos', 'yolov8s_foodseg103.pt')
 
+# Cores dos alimentos na foto anotada (a app usa as mesmas na lista)
+CORES = ['#e6194b', '#3cb44b', '#4363d8', '#f58231', '#911eb4',
+         '#42d4f4', '#f032e6', '#9a6324', '#469990', '#808000']
+
+
+def hex_para_bgr(cor):
+    r, g, b = (int(cor[i:i + 2], 16) for i in (1, 3, 5))
+    return b, g, r
+
 
 class SmartCarbDetector:
     def __init__(self, caminho_modelo: str = CAMINHO_MODELO,
@@ -28,49 +37,49 @@ class SmartCarbDetector:
                 "Não foi possível medir o prato nesta foto — tenta uma foto com o prato inteiro visível."
             )
 
-        resultados = self.modelo(caminho_imagem, conf=conf)
+        r = self.modelo(caminho_imagem, conf=conf, verbose=False)[0]
         deteções = []
-        imagem_anotada = imagem_bgr.copy()
-
-        for r in resultados:
-            if r.masks is None:
-                continue
-            for i, poligono in enumerate(r.masks.xy):
-                nome_ingles = self.modelo.names[int(r.boxes.cls[i])]
-                
-                # Ignorar prato/utensílios ou fundos se existirem
-                if nome_ingles in ['plate', 'tray']:
-                    continue
-
-                pts = poligono.astype(np.int32)
+        if r.masks is not None:
+            for poligono, classe, confianca in zip(r.masks.xy, r.boxes.cls, r.boxes.conf):
                 area_pixeis = cv2.contourArea(poligono.astype(np.float32))
-                area_cm2 = self.calibrador.pixels_para_cm2(area_pixeis, escala)
-
                 deteções.append({
-                    'detetado': nome_ingles,
-                    'area_cm2': area_cm2,
+                    'detetado': self.modelo.names[int(classe)],
+                    'confianca': float(confianca),
+                    'area_cm2': self.calibrador.pixels_para_cm2(area_pixeis, escala),
+                    'cor': CORES[len(deteções) % len(CORES)],
+                    'poligono': poligono.astype(np.int32),
                 })
 
-                if salvar_anotada:
-                    cv2.polylines(imagem_anotada, [pts], isClosed=True, color=(0, 255, 0), thickness=2)
-                    momento = cv2.moments(pts)
-                    if momento["m00"] != 0:
-                        cx = int(momento["m10"] / momento["m00"])
-                        cy = int(momento["m01"] / momento["m00"])
-                    else:
-                        cx, cy = pts[0][0], pts[0][1]
-
-                    cv2.putText(
-                        imagem_anotada,
-                        nome_ingles,
-                        (cx - 20, cy),
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        0.6,
-                        (0, 0, 255),
-                        2
-                    )
-
         if salvar_anotada:
-            cv2.imwrite("resultado_detecao.jpg", imagem_anotada)
+            cv2.imwrite("resultado_detecao.jpg", desenhar(imagem_bgr, deteções))
 
+        for det in deteções:
+            del det['poligono']
         return deteções
+
+
+def desenhar(imagem_bgr, deteções):
+    """Pinta cada alimento com a sua cor e escreve o seu número no centro."""
+    pintada = imagem_bgr.copy()
+    for det in deteções:
+        cv2.fillPoly(pintada, [det['poligono']], hex_para_bgr(det['cor']))
+    imagem = cv2.addWeighted(pintada, 0.3, imagem_bgr, 0.7, 0)
+
+    tamanho = max(imagem.shape[:2]) / 1000  # para o desenho ter o mesmo aspeto em fotos grandes e pequenas
+    for n, det in enumerate(deteções, start=1):
+        cor = hex_para_bgr(det['cor'])
+        cv2.polylines(imagem, [det['poligono']], True, cor, max(2, int(3 * tamanho)))
+
+        m = cv2.moments(det['poligono'])
+        if m['m00'] == 0:
+            continue
+        cx, cy = int(m['m10'] / m['m00']), int(m['m01'] / m['m00'])
+        raio = int(22 * tamanho)
+        cv2.circle(imagem, (cx, cy), raio, cor, -1)
+        cv2.circle(imagem, (cx, cy), raio, (255, 255, 255), max(2, int(3 * tamanho)))
+        texto = str(n)
+        escala_txt = 0.9 * tamanho
+        (tw, th), _ = cv2.getTextSize(texto, cv2.FONT_HERSHEY_SIMPLEX, escala_txt, max(1, int(2 * tamanho)))
+        cv2.putText(imagem, texto, (cx - tw // 2, cy + th // 2), cv2.FONT_HERSHEY_SIMPLEX,
+                    escala_txt, (255, 255, 255), max(1, int(2 * tamanho)), cv2.LINE_AA)
+    return imagem

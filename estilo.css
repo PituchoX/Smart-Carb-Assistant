@@ -1,0 +1,78 @@
+/* Conteúdo centrado e com largura máxima */
+[data-testid="stMainBlockContainer"], .block-container {
+    max-width: 1150px;
+    padding-top: 2rem;
+}
+[data-testid="stHeader"] { background: transparent; }
+
+/* Faixa de apresentação */
+.hero {
+    background: linear-gradient(135deg, #15803d 0%, #22c55e 100%);
+    border-radius: 20px;
+    padding: 2.2rem 2.5rem;
+    color: white;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 30px rgba(21, 128, 61, 0.25);
+}
+.hero h1 { color: white; font-size: 2.4rem; font-weight: 800; margin: 0; padding: 0; }
+.hero p { color: #ecfdf5; font-size: 1.1rem; margin: 0.4rem 0 1.1rem 0; }
+.chip {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    padding: 0.3rem 0.9rem;
+    margin: 0 0.4rem 0.4rem 0;
+    font-size: 0.9rem;
+}
+
+/* Zona de upload */
+[data-testid="stFileUploaderDropzone"] {
+    border: 2px dashed #22c55e;
+    background: #f0fdf4;
+    border-radius: 16px;
+    padding: 1.6rem;
+}
+[data-testid="stFileUploaderDropzoneInstructions"] small { display: none; }
+
+/* Cartões "Como funciona" */
+.passo {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 1.4rem;
+    height: 100%;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+.passo .icone { font-size: 2rem; }
+.passo .numero { color: #16a34a; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.05em; }
+.passo h4 { margin: 0.2rem 0 0.4rem 0; padding: 0; }
+.passo p { color: #6b7280; margin: 0; font-size: 0.95rem; }
+
+/* Cartão do total de hidratos */
+.total {
+    background: linear-gradient(135deg, #15803d 0%, #22c55e 100%);
+    color: white;
+    border-radius: 18px;
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 10px 25px rgba(21, 128, 61, 0.25);
+}
+.total .rotulo { font-size: 0.95rem; color: #dcfce7; }
+.total .valor { font-size: 3.2rem; font-weight: 800; line-height: 1.1; }
+.total .intervalo { font-size: 0.95rem; color: #dcfce7; }
+
+/* Número de cada alimento (mesma cor que na foto) */
+.bolinha {
+    color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+/* Fotos com cantos arredondados */
+[data-testid="stImage"] img { border-radius: 16px; }

@@ -74,14 +74,15 @@ escolhido dá sempre mais peso a mais área e é fácil de explicar. Detalhes em
 
 - O modelo de deteção tem precisão modesta (mAP50 = 0,30): às vezes confunde alimentos (ex: batatas fritas →
   `pasta`) ou deteta pedaços que não existem. Por isso a app pede confirmação.
-- O peso foi aprendido com porções de cantina, mais pequenas e rasas do que um prato de restaurante.
+- O peso foi aprendido com porções de cantina, mais pequenas e rasas do que um prato de restaurante, por isso
+  tende a ficar abaixo do real em pratos portugueses. O peso é editável na app.
 - Uma foto de cima não mostra a altura da comida, por isso o peso tem sempre um erro considerável.
 - Pratos portugueses compostos (feijoada, bacalhau à brás) não existem nas classes do modelo.
 
 ## Estrutura do projeto
 
 ```
-app.py                      App (Streamlit)
+app.py                      App (Streamlit); estilo.css tem o aspeto visual
 vision/detetor.py           Deteção dos alimentos e área de cada um
 vision/calibration.py       Deteção do prato e escala (píxeis → cm²)
 nutrition/calculator.py     Peso e hidratos a partir da tabela
