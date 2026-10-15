@@ -10,6 +10,7 @@ __pycache__/
 # Dados e imagens de teste
 *.jpg
 *.png
+!docs/*.png
 
 # Checkpoints de notebooks
 .ipynb_checkpoints/

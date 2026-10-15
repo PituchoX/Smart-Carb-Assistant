@@ -8,6 +8,8 @@ Em restaurantes não há balança, por isso a contagem é feita "a olho".
 
 > **Nota:** é uma estimativa com erros de dezenas de gramas. Não substitui a pesagem nem a orientação médica.
 
+![Página inicial da app](docs/pagina_inicial.png)
+
 ## Como funciona
 
 ```
