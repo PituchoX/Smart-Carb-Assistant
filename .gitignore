@@ -21,3 +21,15 @@ dados/nutrition5k/
 
 # FoodSeg103 convertido para YOLO (grande, não vai para o git)
 dados/foodseg103/
+
+# Notas pessoais (não vão para o GitHub)
+notas/
+
+# CV e documentos pessoais
+CV*.pdf
+*.docx
+
+*.zip
+
+# Material do estágio (confidencial, não vai para o GitHub)
+Estágio/

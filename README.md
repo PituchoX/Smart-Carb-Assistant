@@ -97,7 +97,7 @@ scripts/preparar_foodseg103.py      FoodSeg103 → formato YOLO (treino / valida
 scripts/avaliar_detecao.py          Compara modelos de deteção nas fotos de teste
 notebooks/treinar_detetor_colab.ipynb  Treino do modelo de deteção (Google Colab)
 
-dados/      PDF da APDP, tabela do INSA e a tabela de alimentos usada pela app
+dados/      PDF da APDP e a tabela de alimentos usada pela app
 modelos/    yolov8s_foodseg103.pt (deteção) e gramas_por_cm2.json (peso)
 tests/      Testes (pytest)
 ```
